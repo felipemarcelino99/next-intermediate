@@ -10,7 +10,7 @@ import { notFound } from "next/navigation";
 
 async function fetchJob(jobId: string) {
   const res = await fetch(
-    `https://apis.codante.io/api/job-board/jobs/${jobId}?slow=true`,
+    `https://apis.codante.io/api/job-board/jobs/${jobId}`,
   );
   if (!res.ok) return undefined;
   const data = await res.json();

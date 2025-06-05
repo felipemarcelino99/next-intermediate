@@ -1,6 +1,6 @@
 async function fetchComments(jobId: string) {
   const res = await fetch(
-    `https://apis.codante.io/api/job-board/jobs/${jobId}/comments?slow=true`,
+    `https://apis.codante.io/api/job-board/jobs/${jobId}/comments`,
   );
   if (!res.ok) return [];
   const data = await res.json();
