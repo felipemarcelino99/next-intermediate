@@ -1,11 +1,13 @@
 "use client";
 
 import { Input } from "@/components/ui/input";
-import { Search, SearchIcon } from "lucide-react";
-import { useSearchParams, useRouter } from "next/navigation";
+import { Loader2, Search } from "lucide-react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useTransition } from "react";
 import { useDebouncedCallback } from "use-debounce";
 
 export default function SearchBar() {
+  const [isPending, startTransition] = useTransition();
   const searchParams = useSearchParams();
   const router = useRouter();
   const previousSearchText = searchParams?.get("search") || "";
@@ -16,11 +18,14 @@ export default function SearchBar() {
 
     if (searchText) {
       urlSearchParams.set("search", searchText);
+      urlSearchParams.delete("page");
     } else {
       urlSearchParams.delete("search");
     }
 
-    router.replace(`?${urlSearchParams.toString()}`);
+    startTransition(() => {
+      router.replace(`?${urlSearchParams.toString()}`);
+    });
   };
 
   const debouncedHandleChange = useDebouncedCallback(
@@ -34,7 +39,13 @@ export default function SearchBar() {
         type="search"
         placeholder="Busque uma vaga..."
         className="py-6 text-lg"
-        icon={<Search className="size-4" />}
+        icon={
+          isPending ? (
+            <Loader2 className="size-4 animate-spin" />
+          ) : (
+            <Search className="size-4" />
+          )
+        }
         onChange={debouncedHandleChange}
         defaultValue={previousSearchText}
       />
